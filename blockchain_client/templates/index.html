@@ -47,6 +47,38 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <label class="col-sm-2">Public Key:</label>
+            <div class="col-sm-10">
+                <textarea id="public_key" rows="5" class="form-control" readonly></textarea>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Private Key:</label>
+            <div class="col-sm-10">
+                <textarea id="private_key" rows="5" class="form-control" readonly></textarea>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row" id="warning" style="display:none">
+            <div class="col-sm-12">
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        <li>Save the public and private keys, they can't be recovered</li>
+                        <li>Don't Share your private key with anyone</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <script src="/static/vendor/jquery/jquery.min.js"></script>
     <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/static/vendor/DataTables/js/datatables.min.js"></script>
