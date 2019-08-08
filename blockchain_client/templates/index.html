@@ -41,7 +41,7 @@
                     <br>
                     <h2 class="card-title">Wallet Generator</h2>
                     <p class="card-text">Click on the "Generate Wallet" button to generate a new blockchain wallet</p>
-                    <input type="submit" class="btn btn-primary btn-lg" value="Generate Wallet">
+                    <input type="submit" class="btn btn-primary btn-lg" id="walletGen" value="Generate Wallet">
                 </div>
             </div>
         </div>
@@ -70,8 +70,9 @@
             <div class="col-sm-12">
                 <div class="alert alert-danger" role="alert">
                     <ul>
+                        <h4><b>Important!!!</b></h4>
                         <li>Save the public and private keys, they can't be recovered</li>
-                        <li>Don't Share your private key with anyone</li>
+                        <li>Don't Share your private key with anyone </li>
                     </ul>
                 </div>
             </div>
@@ -86,6 +87,24 @@
 
     <script>
         $(function(){
+
+            $('#walletGen').click(function(){
+
+                // Make an AJAX call to the server and display the public and private key from the response
+                $.ajax({
+                    url: '/wallet/new',
+                    type: 'GET',
+                    success: function(response){// Extract the Private and the Public Key from the response, which is an array
+                            document.getElementById("public_key").innerHTML = response['public_key'];
+                            document.getElementById("private_key").innerHTML = response['private_key'];
+                            document.getElementById("warning").style.display= "block";
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+
+            });
 
         });
     </script>

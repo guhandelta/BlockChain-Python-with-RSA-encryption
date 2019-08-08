@@ -1,4 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
+import Crypto
+from Crypto import Random
+from Crypto.PublicKey import RSA
+import binascii
 
 
 class Transaction:
@@ -32,7 +36,19 @@ def view_transactions():
 # Page to create new wallet
 @app.route('/wallet/new')
 def new_wallet():
-    return 'Wallet Created'
+    random_gen = Crypto.Random.new().read
+    private_key = RSA.generate(1024, random_gen) # Generating a Private key using RSA Algo
+    # 1st param => Key Length or Key size in bits _must be atleast 1024_ || 2nd param => Function that returns random-
+    # -bytes _Crypto.Random()is used here_
+    public_key = private_key.publickey() # Generating a Public key from the Private key
+
+    response = {    # Dictionary
+        'private_key' : binascii.hexlify(private_key.export_key(format('DER'))).decode('ascii'),
+        # exporting the key in DER encoded format and converting it to hexadecimal
+        'public_key' : binascii.hexlify(public_key.export_key(format('DER'))).decode('ascii')
+    }
+
+    return jsonify(response), 200 # The response will be a Dictionary, so converting it into JSON, so the browser can understand
 
 
 if __name__ == '__main__':
