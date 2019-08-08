@@ -21,6 +21,12 @@ app = Flask(__name__)
 def index():
     return render_template('./index.html')
 
+# API to generate a new transaction
+@app.route('/transaction/generate', methods=['POST'])
+def generate_transactions():
+    return 'Transaction Success!'
+
+
 # Page to create transaction
 @app.route('/transaction/make')
 def make_transactions():
