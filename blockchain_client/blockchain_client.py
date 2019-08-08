@@ -1,17 +1,26 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import Crypto
 from Crypto import Random
 from Crypto.PublicKey import RSA
 import binascii
+from collections import OrderedDict
 
 
 class Transaction:
 
-    def __init__(self, sender_address, sender_private_key, recipient_address, amount):
-        self.sender_address = sender_address
+    def __init__(self, sender_public_key, sender_private_key, recipient_public_key, amount):
+        self.sender_public_key = sender_public_key
         self.sender_private_key = sender_private_key
-        self.recipient_address = recipient_address
+        self.recipient_public_key = recipient_public_key
         self.amount = amount
+
+    def to_dict(self):
+        return OrderedDict({
+            'sender_public_key': self.sender_public_key,
+            'sender_private_key': self.sender_private_key,
+            'recipient_public_key': self.recipient_public_key,
+            'amount': self.amount,
+        })
 
 
 app = Flask(__name__)
@@ -24,7 +33,22 @@ def index():
 # API to generate a new transaction
 @app.route('/transaction/generate', methods=['POST'])
 def generate_transactions():
-    return 'Transaction Success!'
+    # Step 1: Get the Transaction Info
+    sender_public_key = request.form['sender_public_key']
+    sender_private_key = request.form['sender_private_key']
+    recipient_public_key = request.form['recipient_public_key']
+    amount = request.form['amount']
+
+    # Step 2: Create a transaction object from the instance/constructor of the Transaction Class
+    transaction = Transaction(sender_public_key, sender_private_key, recipient_public_key, amount)
+
+    # Step 3: Return the response, which is a Dictionary
+    response = {
+        'transaction': transaction.to_dict(), # Converting the transantion details into a transaction
+        'signature': 'blah'
+    }
+
+    return jsonify(response), 200 # Converting the Dict to JSON
 
 
 # Page to create transaction
