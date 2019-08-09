@@ -19,7 +19,8 @@ class Transaction:
     def to_dict(self):
         return OrderedDict({
             'sender_public_key': self.sender_public_key,
-            'sender_private_key': self.sender_private_key,
+            # sender_private_key is not required, as this runs on client side and sender uses their private key to sign-
+            # -the transaction
             'recipient_public_key': self.recipient_public_key,
             'amount': self.amount,
         })
