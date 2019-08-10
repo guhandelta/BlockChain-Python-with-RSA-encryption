@@ -207,7 +207,7 @@
 
         $('#button_confirm_transaction').click(function(){
            $.ajax({
-                url: document.getElementById('node_url').value + '/transaction/new',
+                url: document.getElementById('node_url').value + '/transactions/new',
                 type: 'POST',
                 dataType: 'json',
                 header: {'Access-Control-Allow-Origin':'*'}, // To avoid getting the CORS Error

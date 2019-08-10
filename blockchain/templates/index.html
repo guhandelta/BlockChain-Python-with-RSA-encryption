@@ -1,1 +1,131 @@
-<h2>It Works!!!</h2>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blockchain Client</title>
+
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/vendor/DataTables/css/datatables.min.css" />
+    <link rel="stylesheet" href="/static/vendor/font-awesome/font-awesome.min.css" />
+    <link rel="stylesheet" href="/static/css/custom.css" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a href="#" class="navbar-brand">Blockchain Client</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/transaction/make" class="nav-link">Configure</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="card-body">
+                    <br>
+                    <br>
+                    <h2 class="card-title">Pending Transactions</h2>
+                    <button type="submit" id="refresh_transactions" class="btn btn-primary">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table id="unmined_transactions_table" class="table table-bordered" cellpadding="0" width="100%">
+
+        </table>
+
+        <div class="col-lg-12 text-center">
+            <input type="button" value="Mine Block" id="mine_button" class="btn btn-primary btn-lg">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="card-body">
+                    <br>
+                    <br>
+                    <h2 class="card-title">Transactions</h2>
+                    <button type="submit" id="refresh_blockchain" class="btn btn-primary">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table id="transactions_table" class="table table-bordered" cellpadding="0" width="100%">
+
+        </table>
+    </div>
+
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/vendor/DataTables/js/datatables.min.js"></script>
+    <script src="/static/vendor/DataTables/js/ellipsis.js"></script>
+
+
+    <script>
+        $(function(){
+            $.ajax({
+                url: "/transactions/get",
+                type: "GET",
+                success: function(response){
+                    console.log(response);
+                    let pending_transactions = [] // All the retrieved pending_pending_transactions will be stored in this array
+                    let count = 1
+
+                    for(i=0;i<response['pending_transactions'].length;i++){
+                        let pending_transaction = [
+                               count,
+                               response['pending_transactions'][i]['sender_public_key'],
+                               response['pending_transactions'][i]['recipient_public_key'],
+                               response['pending_transactions'][i]['amount']
+                               // In each iteration, *response[pending_transactions][i]* will be the current transaction
+                               // and for every transaction, retrieve the sender & Recipient public key and amount
+                               // and store it in the array
+                        ]
+
+                        pending_transactions.push(pending_transaction);
+                        // Push every transaction into the pending_transactions array
+
+                        count += 1
+                    }
+                    $('#unmined_transactions_table').dataTable({
+                        data: pending_transactions,
+                        columns: [
+                            {title: "#"},
+                            {title: "Sender Public Key"},
+                            {title: "Recipient Public Key"},
+                            {title: "Amount"}
+                        ],
+                        columnDefs: [{targets: [1,2,3], render:$.fn.dataTable.render.ellipsis(25)}]
+                    });
+                },
+                error: function(error){
+                    console.log(error);
+                }
+
+            });
+        });
+    </script>
+
+</body>
+</html>
